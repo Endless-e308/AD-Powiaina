@@ -12,7 +12,6 @@
     "stylelint": "stylelint \"**/*.css\" --fix"
   },
   "dependencies": {
-    "@antimatter-dimensions/notations": "^3.1.0",
     "@fortawesome/fontawesome-free": "^6.1.1",
     "@tweenjs/tween.js": "^25.0.0",
     "chevrotain": "^4.8.1",
