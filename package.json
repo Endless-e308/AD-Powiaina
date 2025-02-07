@@ -27,7 +27,7 @@
     "svg-pan-zoom": "^3.6.1",
     "v-tooltip": "^2.1.3",
     "vis-network": "^5.1.1",
-    "vue": "^2.7.16",
+    "vue": "^3.0.0",
     "vue-gtag": "^1.16.1",
     "vue-loading-overlay": "^3.4.2",
     "vue-splitpane": "^1.0.6",
