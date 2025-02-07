@@ -126,7 +126,7 @@ export class TimeStudyTree {
 
   static formatStudyList(input) {
     const internal = input.toLowerCase().replaceAll(" ", "");
-    return internal.replaceAll(",", ", ").replace("|", " | ");
+    return internal.replaceAll(",", ", ").replace(/\|/g, " | ");
   }
 
   // This reads off all the studies in the import string and splits them into invalid and valid study IDs. We hold on
