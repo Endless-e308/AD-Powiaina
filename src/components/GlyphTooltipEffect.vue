@@ -73,10 +73,10 @@ export default {
   methods: {
     convertToHTML(string) {
       return string
-        .replace("\n", "<br>")
-        .replace("]", "</span>")
+        .replace(/\n/g, "<br>")
+        .replace(/]/g, "</span>")
         .replace(
-          "[", `<span style="${GlyphAppearanceHandler.isLightBG
+          /\[/g, `<span style="${GlyphAppearanceHandler.isLightBG
             ? ""
             : "text-shadow: white 0 0 0.6rem;"}
             font-weight: bold;">`
