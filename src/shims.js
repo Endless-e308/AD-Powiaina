@@ -1,5 +1,5 @@
 import CodeMirror from "codemirror/lib/codemirror";
-import Decimal from "break_infinity.js";
+import PowiainaNum from "powiaina_num.js";
 import Vue from "vue";
 
 import "codemirror/addon/mode/simple";
@@ -9,5 +9,5 @@ import "codemirror/addon/selection/active-line";
 import "codemirror/addon/edit/closebrackets";
 
 window.CodeMirror = CodeMirror;
-window.Decimal = Decimal;
+window.PowiainaNum = PowiainaNum;
 window.Vue = Vue;
