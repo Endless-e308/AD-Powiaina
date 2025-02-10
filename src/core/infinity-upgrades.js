@@ -136,9 +136,9 @@ class InfinityIPMultUpgrade extends GameMechanicState {
   get cost() {
     if (this.purchaseCount >= this.purchasesAtIncrease) {
       return this.config.costIncreaseThreshold
-        .times(Decimal.pow(this.costIncrease, this.purchaseCount - this.purchasesAtIncrease));
+        .times(PowiainaNum.pow(this.costIncrease, this.purchaseCount - this.purchasesAtIncrease));
     }
-    return Decimal.pow(this.costIncrease, this.purchaseCount + 1);
+    return PowiainaNum.pow(this.costIncrease, this.purchaseCount + 1);
   }
 
   get purchaseCount() {
@@ -180,7 +180,7 @@ class InfinityIPMultUpgrade extends GameMechanicState {
     if (!TimeStudy(181).isBought) {
       Autobuyer.bigCrunch.bumpAmount(DC.D2.pow(amount));
     }
-    Currency.infinityPoints.subtract(Decimal.sumGeometricSeries(amount, this.cost, this.costIncrease, 0));
+    Currency.infinityPoints.subtract(PowiainaNum.sumGeometricSeries(amount, this.cost, this.costIncrease, 0));
     player.IPMultPurchases += amount;
     GameUI.update();
   }
@@ -190,7 +190,7 @@ class InfinityIPMultUpgrade extends GameMechanicState {
     if (!this.hasIncreasedCost) {
       // Only allow IP below the softcap to be used
       const availableIP = Currency.infinityPoints.value.clampMax(this.config.costIncreaseThreshold);
-      const purchases = Decimal.affordGeometricSeries(availableIP, this.cost, this.costIncrease, 0).toNumber();
+      const purchases = PowiainaNum.affordGeometricSeries(availableIP, this.cost, this.costIncrease, 0).toNumber();
       if (purchases <= 0) return;
       this.purchase(purchases);
     }
@@ -199,7 +199,7 @@ class InfinityIPMultUpgrade extends GameMechanicState {
     // it will go in this part)
     if (this.hasIncreasedCost) {
       const availableIP = Currency.infinityPoints.value.clampMax(this.config.costCap);
-      const purchases = Decimal.affordGeometricSeries(availableIP, this.cost, this.costIncrease, 0).toNumber();
+      const purchases = PowiainaNum.affordGeometricSeries(availableIP, this.cost, this.costIncrease, 0).toNumber();
       if (purchases <= 0) return;
       this.purchase(purchases);
     }

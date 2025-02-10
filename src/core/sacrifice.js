@@ -82,7 +82,7 @@ export class Sacrifice {
     } else if (InfinityChallenge(2).isCompleted) {
       prePowerSacrificeMult = nd1Amount.dividedBy(sacrificed);
     } else {
-      prePowerSacrificeMult = new Decimal((nd1Amount.log10() / 10) / Math.max(sacrificed.log10() / 10, 1));
+      prePowerSacrificeMult = new PowiainaNum((nd1Amount.log10() / 10) / Math.max(sacrificed.log10() / 10, 1));
     }
 
     return prePowerSacrificeMult.clampMin(1).pow(this.sacrificeExponent);
@@ -101,7 +101,7 @@ export class Sacrifice {
     if (InfinityChallenge(2).isCompleted) {
       prePowerBoost = player.sacrificed;
     } else {
-      prePowerBoost = new Decimal(player.sacrificed.log10() / 10);
+      prePowerBoost = new PowiainaNum(player.sacrificed.log10() / 10);
     }
 
     return prePowerBoost.clampMin(1).pow(this.sacrificeExponent);
@@ -111,10 +111,10 @@ export class Sacrifice {
 export function sacrificeReset() {
   if (!Sacrifice.canSacrifice) return false;
   if ((!player.break || (!InfinityChallenge.isRunning && NormalChallenge.isRunning)) &&
-    Currency.antimatter.gt(Decimal.NUMBER_MAX_VALUE)) return false;
+    Currency.antimatter.gt(PowiainaNum.NUMBER_MAX_VALUE)) return false;
   if (
     NormalChallenge(8).isRunning &&
-    (Sacrifice.totalBoost.gte(Decimal.NUMBER_MAX_VALUE))
+    (Sacrifice.totalBoost.gte(PowiainaNum.NUMBER_MAX_VALUE))
   ) {
     return false;
   }

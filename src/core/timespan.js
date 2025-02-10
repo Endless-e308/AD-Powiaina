@@ -199,7 +199,7 @@ window.TimeSpan = class TimeSpan {
       return `${format(this.totalYears, 3, 0)} years`;
     }
     if (this.totalSeconds >= 10) {
-      return this.toStringNoDecimals();
+      return this.toStringNoPowiainaNums();
     }
     return this.toStringShort();
   }
@@ -207,7 +207,7 @@ window.TimeSpan = class TimeSpan {
   /**
    * @returns {String}
    */
-  toStringNoDecimals() {
+  toStringNoPowiainaNums() {
     const parts = [];
     function addCheckedComponent(value, name) {
       if (value === 0) {

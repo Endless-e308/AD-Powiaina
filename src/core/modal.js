@@ -276,42 +276,42 @@ Modal.s12Games = new Modal(S12GamesModal);
 function getSaveInfo(save) {
   const resources = {
     realTimePlayed: 0,
-    totalAntimatter: new Decimal(0),
-    infinities: new Decimal(0),
-    eternities: new Decimal(0),
+    totalAntimatter: new PowiainaNum(0),
+    infinities: new PowiainaNum(0),
+    eternities: new PowiainaNum(0),
     realities: 0,
-    infinityPoints: new Decimal(0),
-    eternityPoints: new Decimal(0),
-    realityMachines: new Decimal(0),
+    infinityPoints: new PowiainaNum(0),
+    eternityPoints: new PowiainaNum(0),
+    realityMachines: new PowiainaNum(0),
     imaginaryMachines: 0,
-    dilatedTime: new Decimal(0),
+    dilatedTime: new PowiainaNum(0),
     bestLevel: 0,
-    pelleAM: new Decimal(0),
+    pelleAM: new PowiainaNum(0),
     remnants: 0,
-    realityShards: new Decimal(0),
+    realityShards: new PowiainaNum(0),
     // This is a slight workaround to hide DT/level once Doomed
     pelleLore: 0,
     saveName: "",
     compositeProgress: 0,
   };
   // This code ends up getting run on raw save data before any migrations are applied, so we need to default to props
-  // which only exist on the pre-reality version when applicable. Note that new Decimal(undefined) gives zero.
+  // which only exist on the pre-reality version when applicable. Note that new PowiainaNum(undefined) gives zero.
   resources.realTimePlayed = save.records?.realTimePlayed ?? 100 * save.totalTimePlayed;
-  resources.totalAntimatter.copyFrom(new Decimal(save.records?.totalAntimatter));
-  resources.infinities.copyFrom(new Decimal(save.infinities));
-  resources.eternities.copyFrom(new Decimal(save.eternities));
+  resources.totalAntimatter.copyFrom(new PowiainaNum(save.records?.totalAntimatter));
+  resources.infinities.copyFrom(new PowiainaNum(save.infinities));
+  resources.eternities.copyFrom(new PowiainaNum(save.eternities));
   resources.realities = save.realities ?? 0;
-  resources.infinityPoints.copyFrom(new Decimal(save.infinityPoints));
-  resources.eternityPoints.copyFrom(new Decimal(save.eternityPoints));
-  resources.realityMachines.copyFrom(new Decimal(save.reality?.realityMachines));
+  resources.infinityPoints.copyFrom(new PowiainaNum(save.infinityPoints));
+  resources.eternityPoints.copyFrom(new PowiainaNum(save.eternityPoints));
+  resources.realityMachines.copyFrom(new PowiainaNum(save.reality?.realityMachines));
   resources.imaginaryMachines = save.reality?.iMCap ?? 0;
   // Use max DT instead of current DT because spending it can cause it to drop and trigger the conflict modal
   // unnecessarily. We only use current DT as a fallback (eg. loading a save from pre-reality versions)
-  resources.dilatedTime.copyFrom(new Decimal(save.records?.thisReality.maxDT ?? (save.dilation?.dilatedTime ?? 0)));
+  resources.dilatedTime.copyFrom(new PowiainaNum(save.records?.thisReality.maxDT ?? (save.dilation?.dilatedTime ?? 0)));
   resources.bestLevel = save.records?.bestReality.glyphLevel ?? 0;
-  resources.pelleAM.copyFrom(new Decimal(save.celestials?.pelle.records.totalAntimatter));
+  resources.pelleAM.copyFrom(new PowiainaNum(save.celestials?.pelle.records.totalAntimatter));
   resources.remnants = save.celestials?.pelle.remnants ?? 0;
-  resources.realityShards.copyFrom(new Decimal(save.celestials?.pelle.realityShards));
+  resources.realityShards.copyFrom(new PowiainaNum(save.celestials?.pelle.realityShards));
   resources.pelleLore = save.celestials?.pelle.quoteBits ?? 0;
   resources.saveName = save.options?.saveFileName ?? "";
   resources.compositeProgress = ProgressChecker.getCompositeProgress(save);

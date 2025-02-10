@@ -7,7 +7,7 @@ export function updateNormalAndInfinityChallenges(diff) {
       // These caps are values which occur at approximately e308 IP
       const cappedBase = 1.03 + Math.clampMax(DimBoost.totalBoosts, 400) / 200 +
         Math.clampMax(player.galaxies, 100) / 100;
-      Currency.matter.multiply(Decimal.pow(cappedBase, diff / 20));
+      Currency.matter.multiply(PowiainaNum.pow(cappedBase, diff / 20));
     }
     if (Currency.matter.gt(Currency.antimatter.value) && NormalChallenge(11).isRunning && !Player.canCrunch) {
       const values = [Currency.antimatter.value, Currency.matter.value];
@@ -18,7 +18,7 @@ export function updateNormalAndInfinityChallenges(diff) {
   }
 
   if (NormalChallenge(3).isRunning) {
-    player.chall3Pow = player.chall3Pow.times(DC.D1_00038.pow(diff / 100)).clampMax(Decimal.NUMBER_MAX_VALUE);
+    player.chall3Pow = player.chall3Pow.times(DC.D1_00038.pow(diff / 100)).clampMax(PowiainaNum.NUMBER_MAX_VALUE);
   }
 
   if (NormalChallenge(2).isRunning) {
@@ -114,7 +114,7 @@ class NormalChallengeState extends GameMechanicState {
     if (Enslaved.isRunning && Enslaved.BROKEN_CHALLENGES.includes(this.id)) {
       return DC.E1E15;
     }
-    return Decimal.NUMBER_MAX_VALUE;
+    return PowiainaNum.NUMBER_MAX_VALUE;
   }
 
   updateChallengeTime() {

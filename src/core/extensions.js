@@ -1,4 +1,4 @@
-import { isDecimal } from "../utility/type-check";
+import { isPowiainaNum } from "../utility/type-check";
 
 Array.prototype.distinct = function() {
   return this.filter((value, index, self) => self.indexOf(value) === index);
@@ -44,12 +44,12 @@ Array.prototype.previousSibling = function(current) {
   return this[this.previousSiblingIndex(current)];
 };
 
-Decimal.sumReducer = function(accumulator, previous) {
-  return Decimal.add(accumulator, previous);
+PowiainaNum.sumReducer = function(accumulator, previous) {
+  return PowiainaNum.add(accumulator, previous);
 };
 
-Decimal.prodReducer = function(accumulator, previous) {
-  return Decimal.mul(accumulator, previous);
+PowiainaNum.prodReducer = function(accumulator, previous) {
+  return PowiainaNum.mul(accumulator, previous);
 };
 
 Number.sumReducer = function(accumulator, previous) {
@@ -60,16 +60,16 @@ Number.prodReducer = function(accumulator, previous) {
   return accumulator * previous;
 };
 
-Decimal.maxReducer = function(a, b) {
-  return Decimal.max(a, b);
+PowiainaNum.maxReducer = function(a, b) {
+  return PowiainaNum.max(a, b);
 };
 
-Decimal.prototype.copyFrom = function(decimal) {
-  if (!(decimal instanceof Decimal) && !(decimal instanceof DecimalCurrency)) {
-    throw "Copy value is not Decimal or DecimalCurrency";
+PowiainaNum.prototype.copyFrom = function(powiainaNum) {
+  if (!(powiainaNum instanceof PowiainaNum) && !(powiainaNum instanceof PowiainaNumCurrency)) {
+    throw "Copy value is not PowiainaNum or PowiainaNumCurrency";
   }
-  this.mantissa = decimal.mantissa;
-  this.exponent = decimal.exponent;
+  this.mantissa = powiainaNum.mantissa;
+  this.exponent = powiainaNum.exponent;
 };
 
 window.copyToClipboard = (function() {
@@ -208,18 +208,18 @@ Array.prototype.countWhere = function(predicate) {
 };
 
 /**
- * @returns {Decimal}
+ * @returns {PowiainaNum}
  */
-Decimal.prototype.clampMaxExponent = function(maxExp) {
+PowiainaNum.prototype.clampMaxExponent = function(maxExp) {
   return this.exponent >= maxExp
-    ? Decimal.fromMantissaExponent_noNormalize(1, maxExp) : this;
+    ? PowiainaNum.fromMantissaExponent_noNormalize(1, maxExp) : this;
 };
 
 /**
- * @return {Decimal}
+ * @return {PowiainaNum}
  */
-Number.prototype.toDecimal = function() {
-  return new Decimal(this.valueOf());
+Number.prototype.toPowiainaNum = function() {
+  return new PowiainaNum(this.valueOf());
 };
 
 Math.log4 = Math.log(4);
@@ -228,8 +228,8 @@ Array.prototype.randomElement = function() {
   return this[Math.floor(Math.random() * this.length)];
 };
 
-Decimal.prototype.valueOf = () => {
-  throw new Error("Implicit conversion from Decimal to number");
+PowiainaNum.prototype.valueOf = () => {
+  throw new Error("Implicit conversion from PowiainaNum to number");
 };
 
 Set.prototype.countWhere = function(predicate) {
@@ -291,7 +291,7 @@ String.isWhiteSpace = function(value) {
   return value && !value.trim();
 };
 
-Decimal.isFinite = function(value) {
-  if (!isDecimal(value)) return isFinite(value);
+PowiainaNum.isFinite = function(value) {
+  if (!isPowiainaNum(value)) return isFinite(value);
   return (isFinite(value.m) || isFinite(value.e)) && !(value.e >= 9e15);
 };

@@ -40,24 +40,24 @@ window.formatPostBreak = function formatPostBreak(value, places, placesUnder1000
     return notation.infinite;
   }
 
-  const decimal = Decimal.fromValue_noAlloc(value);
+  const powiainaNum = PowiainaNum.fromValue_noAlloc(value);
 
-  if (decimal.exponent < -300) {
-    return decimal.sign() < 0
-      ? notation.formatVerySmallNegativeDecimal(decimal.abs(), placesUnder1000)
-      : notation.formatVerySmallDecimal(decimal, placesUnder1000);
+  if (powiainaNum.exponent < -300) {
+    return powiainaNum.sign() < 0
+      ? notation.formatVerySmallNegativePowiainaNum(powiainaNum.abs(), placesUnder1000)
+      : notation.formatVerySmallPowiainaNum(powiainaNum, placesUnder1000);
   }
 
-  if (decimal.exponent < 3) {
-    const number = decimal.toNumber();
+  if (powiainaNum.exponent < 3) {
+    const number = powiainaNum.toNumber();
     return number < 0
       ? notation.formatNegativeUnder1000(Math.abs(number), placesUnder1000)
       : notation.formatUnder1000(number, placesUnder1000);
   }
 
-  return decimal.sign() < 0
-    ? notation.formatNegativeDecimal(decimal.abs(), places)
-    : notation.formatDecimal(decimal, places);
+  return powiainaNum.sign() < 0
+    ? notation.formatNegativePowiainaNum(powiainaNum.abs(), places)
+    : notation.formatPowiainaNum(powiainaNum, places);
 };
 
 // eslint-disable-next-line max-params
@@ -81,15 +81,15 @@ window.formatRarity = function formatRarity(value, bypassEND) {
   return `${format(value, 2, places, bypassEND)}%`;
 };
 
-// We assume 2/0, 2/2 decimal places to keep parameter count sensible; this is used very rarely
+// We assume 2/0, 2/2 powiainaNum places to keep parameter count sensible; this is used very rarely
 window.formatMachines = function formatMachines(realPart, imagPart, bypassEND = false) {
   if (isEND() && !bypassEND) return "END";
   const parts = [];
-  if (Decimal.neq(realPart, 0)) parts.push(format(realPart, 2));
-  if (Decimal.neq(imagPart, 0)) parts.push(`${format(imagPart, 2, 2)}i`);
+  if (PowiainaNum.neq(realPart, 0)) parts.push(format(realPart, 2));
+  if (PowiainaNum.neq(imagPart, 0)) parts.push(`${format(imagPart, 2, 2)}i`);
   // This function is used for just RM and just iM in a few spots, so we have to push both parts conditionally
   // Nonetheless, we also need to special-case both zero so that it doesn't end up displaying as an empty string
-  if (Decimal.eq(realPart, 0) && Decimal.eq(imagPart, 0)) return format(0);
+  if (PowiainaNum.eq(realPart, 0) && PowiainaNum.eq(imagPart, 0)) return format(0);
   return parts.join(" + ");
 };
 
@@ -97,8 +97,8 @@ window.timeDisplay = function timeDisplay(ms) {
   return TimeSpan.fromMilliseconds(ms).toString();
 };
 
-window.timeDisplayNoDecimals = function timeDisplayNoDecimals(ms) {
-  return TimeSpan.fromMilliseconds(ms).toStringNoDecimals();
+window.timeDisplayNoPowiainaNums = function timeDisplayNoPowiainaNums(ms) {
+  return TimeSpan.fromMilliseconds(ms).toStringNoPowiainaNums();
 };
 
 window.timeDisplayShort = function timeDisplayShort(ms) {
@@ -107,9 +107,9 @@ window.timeDisplayShort = function timeDisplayShort(ms) {
 
 const commaRegexp = /\B(?=(\d{3})+(?!\d))/gu;
 window.formatWithCommas = function formatWithCommas(value) {
-  const decimalPointSplit = value.toString().split(".");
-  decimalPointSplit[0] = decimalPointSplit[0].replace(commaRegexp, ",");
-  return decimalPointSplit.join(".");
+  const powiainaNumPointSplit = value.toString().split(".");
+  powiainaNumPointSplit[0] = powiainaNumPointSplit[0].replace(commaRegexp, ",");
+  return powiainaNumPointSplit.join(".");
 };
 
 // Some letters in the english language pluralize in a different manner than simply adding an 's' to the end.
@@ -135,7 +135,7 @@ const pluralDatabase = new Map([
 /**
  * A function that pluralizes a word based on a designated amount
  * @param  {string} word           - word to be pluralized
- * @param  {number|Decimal} amount - amount to be used to determine if the value is plural
+ * @param  {number|PowiainaNum} amount - amount to be used to determine if the value is plural
  * @param  {string} [plural]       - if defined, a specific plural to override the generated plural
  * @return {string} - if the {amount} is anything other than one, return the {plural} provided or the
  *                    plural form of the input {word}. If the {amount} is singular, return {word}
@@ -143,7 +143,7 @@ const pluralDatabase = new Map([
 window.pluralize = function pluralize(word, amount, plural) {
   if (word === undefined || amount === undefined) throw "Arguments must be defined";
 
-  if (Decimal.eq(amount, 1)) return word;
+  if (PowiainaNum.eq(amount, 1)) return word;
   const existingPlural = plural ?? pluralDatabase.get(word);
   if (existingPlural !== undefined) return existingPlural;
 
@@ -168,9 +168,9 @@ window.generatePlural = function generatePlural(word) {
 /**
  * Returns the formatted value followed by a name, pluralized based on the value input.
  * @param  {string} name                  - name to pluralize and display after {value}
- * @param  {number|Decimal} value         - number to {format}
+ * @param  {number|PowiainaNum} value         - number to {format}
  * @param  {number} [places]              - number of places to display for the mantissa
- * @param  {number} [placesUnder1000]     - number of decimal places to display
+ * @param  {number} [placesUnder1000]     - number of powiainaNum places to display
  * @param  {function} [formatType=format] - how to format the {value}. defaults to format
  * @return {string} - the formatted {value} followed by the {name} after having been pluralized based on the {value}
  */
@@ -186,7 +186,7 @@ window.quantify = function quantify(name, value, places, placesUnder1000, format
 /**
  * Returns the value formatted to formatInt followed by a name, pluralized based on the value input.
  * @param  {string} name                  - name to pluralize and display after {value}
- * @param  {number|Decimal} value         - number to format
+ * @param  {number|PowiainaNum} value         - number to format
  * @return {string} - the formatted {value} followed by the {name} after having been pluralized based on the {value}
  */
 window.quantifyInt = function quantifyInt(name, value) {

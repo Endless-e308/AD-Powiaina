@@ -31,7 +31,7 @@ export class Galaxy {
    * @returns {number} Max number of galaxies (total)
    */
   static buyableGalaxies(currency) {
-    const bulk = bulkBuyBinarySearch(new Decimal(currency), {
+    const bulk = bulkBuyBinarySearch(new PowiainaNum(currency), {
       costFunction: x => this.requirementAt(x).amount,
       cumulative: false,
     }, player.galaxies);

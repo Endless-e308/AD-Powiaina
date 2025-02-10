@@ -584,7 +584,7 @@ export function beginProcessReality(realityProps) {
 export function finishProcessReality(realityProps) {
   const finalEP = Currency.eternityPoints.value.plus(gainedEternityPoints());
   if (player.records.bestReality.bestEP.lt(finalEP)) {
-    player.records.bestReality.bestEP = new Decimal(finalEP);
+    player.records.bestReality.bestEP = new PowiainaNum(finalEP);
     player.records.bestReality.bestEPSet = Glyphs.copyForRecords(Glyphs.active.filter(g => g !== null));
   }
 

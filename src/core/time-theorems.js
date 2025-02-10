@@ -35,7 +35,7 @@ export class TimeTheoremPurchaseType {
     if (Perk.ttFree.canBeApplied) {
       return Math.floor(this.currency.value.divide(this.cost).log10() / this.costIncrement.log10() + 1);
     }
-    return Decimal.affordGeometricSeries(this.currency.value, this.cost, this.costIncrement, 0).toNumber();
+    return PowiainaNum.affordGeometricSeries(this.currency.value, this.cost, this.costIncrement, 0).toNumber();
   }
 
   // Note: This is actually just the cost of the largest term of the geometric series. If buying EP without the

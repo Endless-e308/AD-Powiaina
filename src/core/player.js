@@ -941,7 +941,7 @@ export const Player = {
   get canCrunch() {
     if (Enslaved.isRunning && Enslaved.BROKEN_CHALLENGES.includes(NormalChallenge.current?.id)) return false;
     const challenge = NormalChallenge.current || InfinityChallenge.current;
-    const goal = challenge === undefined ? Decimal.NUMBER_MAX_VALUE : challenge.goal;
+    const goal = challenge === undefined ? PowiainaNum.NUMBER_MAX_VALUE : challenge.goal;
     return player.records.thisInfinity.maxAM.gte(goal);
   },
 
@@ -967,12 +967,12 @@ export const Player = {
 
   get infinityGoal() {
     const challenge = NormalChallenge.current || InfinityChallenge.current;
-    return challenge === undefined ? Decimal.NUMBER_MAX_VALUE : challenge.goal;
+    return challenge === undefined ? PowiainaNum.NUMBER_MAX_VALUE : challenge.goal;
   },
 
   get infinityLimit() {
     const challenge = NormalChallenge.current || InfinityChallenge.current;
-    return challenge === undefined ? Decimal.MAX_VALUE : challenge.goal;
+    return challenge === undefined ? PowiainaNum.MAX_VALUE : challenge.goal;
   },
 
   get eternityGoal() {
@@ -1031,7 +1031,7 @@ export const Player = {
 
 export function guardFromNaNValues(obj) {
   function isObject(ob) {
-    return ob !== null && typeof ob === "object" && !(ob instanceof Decimal);
+    return ob !== null && typeof ob === "object" && !(ob instanceof PowiainaNum);
   }
 
   for (const key in obj) {
@@ -1065,7 +1065,7 @@ export function guardFromNaNValues(obj) {
       });
     }
 
-    if (value instanceof Decimal) {
+    if (value instanceof PowiainaNum) {
       Object.defineProperty(obj, key, {
         enumerable: true,
         configurable: true,
@@ -1075,8 +1075,8 @@ export function guardFromNaNValues(obj) {
           if (newValue === null || newValue === undefined) {
             throw new Error("null/undefined player property assignment");
           }
-          if (!(newValue instanceof Decimal)) {
-            throw new Error("Non-Decimal assignment to Decimal player property");
+          if (!(newValue instanceof PowiainaNum)) {
+            throw new Error("Non-PowiainaNum assignment to PowiainaNum player property");
           }
           if (!isFinite(newValue.mantissa) || !isFinite(newValue.exponent)) {
             throw new Error("NaN player property assignment");

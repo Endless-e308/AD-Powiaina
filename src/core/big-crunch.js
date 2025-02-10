@@ -100,7 +100,7 @@ function bigCrunchUpdateStatistics() {
   if (!player.requirementChecks.infinity.maxAll) {
     const bestIpPerMsWithoutMaxAll = infinityPoints.dividedBy(Math.clampMin(33, player.records.thisInfinity.realTime));
     player.records.thisEternity.bestIPMsWithoutMaxAll =
-      Decimal.max(bestIpPerMsWithoutMaxAll, player.records.thisEternity.bestIPMsWithoutMaxAll);
+      PowiainaNum.max(bestIpPerMsWithoutMaxAll, player.records.thisEternity.bestIPMsWithoutMaxAll);
   }
 }
 
@@ -171,7 +171,7 @@ export function preProductionGenerateIP(diff) {
     const genPeriod = Time.bestInfinity.totalMilliseconds * 10;
     let genCount;
     if (diff >= 1e300 * genPeriod) {
-      genCount = Decimal.div(diff, genPeriod);
+      genCount = PowiainaNum.div(diff, genPeriod);
     } else {
       // Partial progress (fractions from 0 to 1) are stored in player.partInfinityPoint
       player.partInfinityPoint += diff / genPeriod;
@@ -180,7 +180,7 @@ export function preProductionGenerateIP(diff) {
     }
     let gainedPerGen = player.records.bestInfinity.time >= 999999999999 ? DC.D0 : InfinityUpgrade.ipGen.effectValue;
     if (Laitela.isRunning) gainedPerGen = dilatedValueOf(gainedPerGen);
-    const gainedThisTick = new Decimal(genCount).times(gainedPerGen);
+    const gainedThisTick = new PowiainaNum(genCount).times(gainedPerGen);
     Currency.infinityPoints.add(gainedThisTick);
   }
   Currency.infinityPoints.add(BreakInfinityUpgrade.ipGen.effectOrDefault(DC.D0).times(diff / 60000));

@@ -17,7 +17,7 @@ Math.PI_2 = Math.PI * 2;
 /**
  * @typedef {Object} bulkBuyBinarySearch_result
  * @property {number} quantity amount purchased (relative)
- * @property {Decimal} purchasePrice amount that needs to be paid to get that
+ * @property {PowiainaNum} purchasePrice amount that needs to be paid to get that
  */
 
 /**
@@ -31,10 +31,10 @@ Math.PI_2 = Math.PI * 2;
  * if you can afford purchase N, you can afford the combined cost of everything before N
  * (it does check and make sure you can afford all of that put together. See below in code
  * for details)
- * @param {Decimal} money Amount of currency available
+ * @param {PowiainaNum} money Amount of currency available
  * @param {Object} costInfo cost parameters:
- * @param {function(number): Decimal} costInfo.costFunction price of the n'th purchase (starting from 0)
- * @param {Decimal} [costInfo.firstCost] Cost of the next purchase; this is usually available/cached. Will
+ * @param {function(number): PowiainaNum} costInfo.costFunction price of the n'th purchase (starting from 0)
+ * @param {PowiainaNum} [costInfo.firstCost] Cost of the next purchase; this is usually available/cached. Will
  *   be calculated from costFunction if not provided.
  * @param {boolean} [costInfo.cumulative] (Defaults to true) specifies whether one must pay a cumulative
  *   cost or just the highest cost.
@@ -265,8 +265,8 @@ window.findFirstInfiniteCostPurchase = function findFirstInfiniteCostPurchase(
  */
 window.LinearCostScaling = class LinearCostScaling {
   /**
-   * @param {Decimal} resourcesAvailable amount of available resources
-   * @param {Decimal} initialCost current cost
+   * @param {PowiainaNum} resourcesAvailable amount of available resources
+   * @param {PowiainaNum} initialCost current cost
    * @param {Number} costMultiplier current cost multiplier
    * @param {Number} maxPurchases max amount of purchases
    * @param {Boolean} free signifies if the purchase is free -> if we only need to consider the last cost
@@ -281,11 +281,11 @@ window.LinearCostScaling = class LinearCostScaling {
         resourcesAvailable.mul(costMultiplier - 1).div(initialCost).add(1).log10() /
         Math.log10(costMultiplier)), maxPurchases);
     }
-    this._totalCostMultiplier = Decimal.pow(costMultiplier, this._purchases);
+    this._totalCostMultiplier = PowiainaNum.pow(costMultiplier, this._purchases);
     if (free) {
-      this._totalCost = initialCost.mul(Decimal.pow(costMultiplier, this._purchases - 1));
+      this._totalCost = initialCost.mul(PowiainaNum.pow(costMultiplier, this._purchases - 1));
     } else {
-      this._totalCost = initialCost.mul(Decimal.sub(1, this._totalCostMultiplier)).div(1 - costMultiplier);
+      this._totalCost = initialCost.mul(PowiainaNum.sub(1, this._totalCostMultiplier)).div(1 - costMultiplier);
     }
   }
 
@@ -318,20 +318,20 @@ window.LinearCostScaling = class LinearCostScaling {
 window.ExponentialCostScaling = class ExponentialCostScaling {
   /**
    * @param {Object} param configuration object with the following fields
-   * @param {number|Decimal} param.baseCost the cost of the first purchase
+   * @param {number|PowiainaNum} param.baseCost the cost of the first purchase
    * @param {number} param.baseIncrease the baseline increase in price
    * @param {number} param.costScale the amount by which the cost scaling increases;
    *  e.g. if it is 10, then the ratio between successive prices goes up by 10
    * @param {number} [param.purchasesBeforeScaling] the number of purchases that can
    *  be made before scaling begins. If baseCost is B, baseIncrease is C, and costScale is S,
    *  and purchasesBeforeScaling is 0, the prices will go: B, B C, B C^2 S, B C^3 S^3, etc.
-   * @param {number|Decimal} [param.scalingCostThreshold] an alternative way of specifying
+   * @param {number|PowiainaNum} [param.scalingCostThreshold] an alternative way of specifying
    *  when scaling begins; once the cost is >= this threshold, scaling applies. Using the same
    *  notation: B BC BC^2 .... BC^n <threshold> BC^(n+1) BC^(n+2)S BC^(n+3)S^3 etc. So, the first
    *  price past the threshold has no costScale in it, but everything past that does.
    */
   constructor(param) {
-    this._baseCost = new Decimal(param.baseCost);
+    this._baseCost = new PowiainaNum(param.baseCost);
     this._baseIncrease = param.baseIncrease;
     if (typeof this._baseIncrease !== "number") throw new Error("baseIncrease must be a number");
     this._costScale = param.costScale;
@@ -390,7 +390,7 @@ window.ExponentialCostScaling = class ExponentialCostScaling {
    * means it's not suitable for accurate caclulation of cumulative prices if the
    * multiplier is small.
    * @param {number} currentPurchases amount already possessed
-   * @param {Decimal} money
+   * @param {PowiainaNum} money
    * @returns {QuantityAndPrice|null} maximum value of bought that money can buy up to
    */
   getMaxBought(currentPurchases, rawMoney, numberPerSet) {
@@ -430,7 +430,7 @@ window.ExponentialCostScaling = class ExponentialCostScaling {
    * Determines the number of purchases that would be possible, if purchase count was continuous. Might
    * have some odd behavior right at e308, but otherwise should work. It's mostly a copy-paste from
    * getMaxBought() above but with unnecessary extra code removed.
-   * @param {Decimal} money
+   * @param {PowiainaNum} money
    * @returns {number} maximum value of bought that money can buy up to
    */
   getContinuumValue(rawMoney, numberPerSet) {
@@ -458,7 +458,7 @@ window.ExponentialCostScaling = class ExponentialCostScaling {
   }
 
   static log10(value) {
-    if (value instanceof Decimal) return value.log10();
+    if (value instanceof PowiainaNum) return value.log10();
     return Math.log10(value);
   }
 };
@@ -507,7 +507,7 @@ window.getHybridCostScaling = function getHybridCostScaling(
   const normalCost = getCostWithLinearCostScaling(amountOfPurchases, linCostScalingStart, linInitialCost,
     linCostMult, linCostMultGrowth);
   if (Number.isFinite(normalCost)) {
-    return new Decimal(normalCost);
+    return new PowiainaNum(normalCost);
   }
   const postInfinityAmount = amountOfPurchases - findFirstInfiniteCostPurchase(linCostScalingStart, linInitialCost,
     linCostMult, linCostMultGrowth);
@@ -622,14 +622,14 @@ window.binomialDistributionSmallExpected = function binomialDistributionSmallExp
 
 window.binomialDistribution = function binomialDistribution(numSamples, p) {
   if (p === 0) return 0;
-  if (numSamples instanceof Decimal) {
+  if (numSamples instanceof PowiainaNum) {
     if (numSamples.e < 308) {
       const pNumber = typeof p === "number" ? p : p.toNumber();
-      return new Decimal(binomialDistribution(numSamples.toNumber(), pNumber));
+      return new PowiainaNum(binomialDistribution(numSamples.toNumber(), pNumber));
     }
     const expected = numSamples.times(p);
     if (expected.e > 32) return expected;
-    return new Decimal(poissonDistribution(numSamples.times(p)));
+    return new PowiainaNum(poissonDistribution(numSamples.times(p)));
   }
   const expected = numSamples * p;
   // BTRD is good past 10, but the inversion method we use is faster up to 15 and is exact
@@ -646,14 +646,14 @@ window.binomialDistribution = function binomialDistribution(numSamples, p) {
 
 /**
  * Chooses the method of generation based on the input
- * @param {number|Decimal} expected expected value of distribution
- * @returns {number|Decimal} number of poisson process events
+ * @param {number|PowiainaNum} expected expected value of distribution
+ * @returns {number|PowiainaNum} number of poisson process events
  */
 window.poissonDistribution = function poissonDistribution(expected) {
   if (expected === 0) return 0;
-  if (expected instanceof Decimal) {
+  if (expected instanceof PowiainaNum) {
     if (expected.e > 32) return expected;
-    return new Decimal(poissonDistribution(expected.toNumber()));
+    return new PowiainaNum(poissonDistribution(expected.toNumber()));
   }
   if (expected > 1e32) return expected;
   if (expected > 1e4) return poissonDistributionViaNormal(expected);

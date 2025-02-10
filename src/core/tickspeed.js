@@ -100,7 +100,7 @@ export function buyMaxTickSpeed() {
     if (purchases === null) {
       return;
     }
-    Currency.antimatter.subtract(Decimal.pow10(purchases.logPrice));
+    Currency.antimatter.subtract(PowiainaNum.pow10(purchases.logPrice));
     player.totalTickBought += purchases.quantity;
     boughtTickspeed = true;
   }
@@ -127,7 +127,7 @@ export const Tickspeed = {
     return this.isUnlocked &&
       !EternityChallenge(9).isRunning &&
       !Laitela.continuumActive &&
-      (player.break || this.cost.lt(Decimal.NUMBER_MAX_VALUE));
+      (player.break || this.cost.lt(PowiainaNum.NUMBER_MAX_VALUE));
   },
 
   get isAffordable() {
@@ -181,7 +181,7 @@ export const Tickspeed = {
   },
 
   get perSecond() {
-    return Decimal.divide(1000, this.current);
+    return PowiainaNum.divide(1000, this.current);
   },
 
   multiplySameCosts() {
@@ -220,7 +220,7 @@ export const FreeTickspeed = {
       this.multToNext = tickmult;
       return {
         newAmount: Math.ceil(uncapped),
-        nextShards: Decimal.pow(tickmult, Math.ceil(uncapped))
+        nextShards: PowiainaNum.pow(tickmult, Math.ceil(uncapped))
       };
     }
     // Log of (cost - cost up to softcap)
@@ -255,8 +255,8 @@ export const FreeTickspeed = {
     const purchases = Math.floor(approximation);
     // This undoes the function we're implicitly applying to costs (the "+ 1") is because we want
     // the cost of the next upgrade.
-    const next = Decimal.exp(priceToCap + boughtToCost(purchases + 1) * logTickmult);
-    this.multToNext = Decimal.exp((boughtToCost(purchases + 1) - boughtToCost(purchases)) * logTickmult);
+    const next = PowiainaNum.exp(priceToCap + boughtToCost(purchases + 1) * logTickmult);
+    this.multToNext = PowiainaNum.exp((boughtToCost(purchases + 1) - boughtToCost(purchases)) * logTickmult);
     return {
       newAmount: purchases + FreeTickspeed.softcap,
       nextShards: next,

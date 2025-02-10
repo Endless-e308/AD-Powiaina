@@ -233,8 +233,8 @@ function askEternityConfirmation() {
 
 export function gainedEternities() {
   return Pelle.isDisabled("eternityMults")
-    ? new Decimal(1)
-    : new Decimal(getAdjustedGlyphEffect("timeetermult"))
+    ? new PowiainaNum(1)
+    : new PowiainaNum(getAdjustedGlyphEffect("timeetermult"))
       .timesEffectsOf(RealityUpgrade(3), Achievement(113))
       .pow(AlchemyResource.eternity.effectValue);
 }
@@ -332,14 +332,14 @@ class EPMultiplierState extends GameMechanicState {
   }
 
   get costIncreaseThresholds() {
-    return [DC.E100, Decimal.NUMBER_MAX_VALUE, DC.E1300, DC.E4000];
+    return [DC.E100, PowiainaNum.NUMBER_MAX_VALUE, DC.E1300, DC.E4000];
   }
 
   costAfterCount(count) {
     const costThresholds = EternityUpgrade.epMult.costIncreaseThresholds;
     const multPerUpgrade = [50, 100, 500, 1000];
     for (let i = 0; i < costThresholds.length; i++) {
-      const cost = Decimal.pow(multPerUpgrade[i], count).times(500);
+      const cost = PowiainaNum.pow(multPerUpgrade[i], count).times(500);
       if (cost.lt(costThresholds[i])) return cost;
     }
     return DC.E3.pow(count + Math.pow(Math.clampMin(count - 1334, 0), 1.2)).times(500);

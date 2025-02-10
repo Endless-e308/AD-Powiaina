@@ -18,15 +18,16 @@ dev.giveAllAchievements = function() {
 
 dev.multiplyEverythingBy = function(amount) {
   // eslint-disable-next-line no-param-reassign
-  amount = new Decimal(amount);
+  amount = new PowiainaNum(amount);
   Object.keys(player).forEach(key => {
     if (typeof player[key] === "number") player[key] *= amount.toNumber();
-    if (player[key] instanceof Decimal && Decimal.isFinite(player[key])) player[key] = player[key].times(amount);
-    if (typeof player[key] === "object" && !Decimal.isFinite(player[key])) {
+    // eslint-disable-next-line max-len
+    if (player[key] instanceof PowiainaNum && PowiainaNum.isFinite(player[key])) player[key] = player[key].times(amount);
+    if (typeof player[key] === "object" && !PowiainaNum.isFinite(player[key])) {
       Object.keys(player[key]).forEach(key2 => {
-        if (typeof player[key][key2] === "number" && !Decimal.isFinite(player[key][key2]))
+        if (typeof player[key][key2] === "number" && !PowiainaNum.isFinite(player[key][key2]))
           player[key][key2] *= amount.toNumber();
-        if (player[key][key2] instanceof Decimal) player[key][key2] = player[key][key2].times(amount);
+        if (player[key][key2] instanceof PowiainaNum) player[key][key2] = player[key][key2].times(amount);
       });
     }
   });
@@ -384,7 +385,7 @@ dev.testReplicantiCode = function(singleId, useDebugger = false) {
     function doReplicantiTicks() {
       for (let j = 0; j <= 5; j++) {
         replicantiLoop(Math.pow(10, j));
-        resultList.push(Notation.scientific.formatDecimal(Replicanti.amount, 5, 5));
+        resultList.push(Notation.scientific.formatPowiainaNum(Replicanti.amount, 5, 5));
         resultList.push(player.replicanti.galaxies);
         resultList.push(Replicanti.galaxies.total);
       }
