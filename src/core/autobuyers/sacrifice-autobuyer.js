@@ -30,7 +30,7 @@ export class SacrificeAutobuyerState extends AutobuyerState {
   }
 
   get inputType() {
-    return "decimal";
+    return "powiainaNum";
   }
 
   get inputEntry() {
@@ -38,6 +38,7 @@ export class SacrificeAutobuyerState extends AutobuyerState {
   }
 
   tick() {
-    if (Achievement(118).canBeApplied || Sacrifice.nextBoost.gte(Decimal.max(this.multiplier, 1.01))) sacrificeReset();
+    // eslint-disable-next-line max-len
+    if (Achievement(118).canBeApplied || Sacrifice.nextBoost.gte(PowiainaNum.max(this.multiplier, 1.01))) sacrificeReset();
   }
 }
