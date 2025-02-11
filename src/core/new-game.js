@@ -1,4 +1,4 @@
-import * as ADNotations from "@antimatter-dimensions/notations";
+import { format as formatPowiainanum } from "format-powiainanum";
 
 export const NG = {
   startNewGame() {
