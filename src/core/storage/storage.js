@@ -1,4 +1,4 @@
-import * as ADNotations from "@antimatter-dimensions/notations";
+import { format as formatPowiainanum } from "format-powiainanum";
 
 import { DEV } from "@/env";
 import { devMigrations } from "./dev-migrations";
