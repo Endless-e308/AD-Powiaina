@@ -100,11 +100,11 @@ export const Effarig = {
   },
   get tickspeed() {
     const base = 3 + Tickspeed.baseValue.reciprocal().log10();
-    return Decimal.pow10(Math.pow(base, this.tickDilation)).reciprocal();
+    return PowiainaNum.pow10(Math.pow(base, this.tickDilation)).reciprocal();
   },
   multiplier(mult) {
-    const base = new Decimal(mult).pLog10();
-    return Decimal.pow10(Math.pow(base, this.multDilation));
+    const base = new PowiainaNum(mult).pLog10();
+    return PowiainaNum.pow10(Math.pow(base, this.multDilation));
   },
   get bonusRG() {
     // Will return 0 if Effarig Infinity is uncompleted

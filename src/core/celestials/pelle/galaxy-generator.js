@@ -27,7 +27,7 @@ export const GalaxyGenerator = {
 
   get gainPerSecond() {
     if (!Pelle.hasGalaxyGenerator) return 0;
-    return new Decimal(GalaxyGeneratorUpgrades.additive.effectValue).timesEffectsOf(
+    return new PowiainaNum(GalaxyGeneratorUpgrades.additive.effectValue).timesEffectsOf(
       GalaxyGeneratorUpgrades.multiplicative,
       GalaxyGeneratorUpgrades.antimatterMult,
       GalaxyGeneratorUpgrades.IPMult,

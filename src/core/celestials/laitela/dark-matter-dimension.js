@@ -73,8 +73,8 @@ export class DarkMatterDimensionState extends DimensionState {
   }
 
   get powerDM() {
-    if (!this.isUnlocked) return new Decimal(0);
-    return new Decimal(1 + 2 * Math.pow(1.15, this.data.powerDMUpgrades))
+    if (!this.isUnlocked) return new PowiainaNum(0);
+    return new PowiainaNum(1 + 2 * Math.pow(1.15, this.data.powerDMUpgrades))
       .times(Laitela.realityReward)
       .times(Laitela.darkMatterMult)
       .times(this.commonDarkMult)
@@ -87,7 +87,7 @@ export class DarkMatterDimensionState extends DimensionState {
     if (!this.isUnlocked || Pelle.isDoomed) return 0;
     const tierFactor = Math.pow(15, this.tier - 1);
     const destabilizeBoost = Laitela.isFullyDestabilized ? 8 : 1;
-    return new Decimal(((1 + this.data.powerDEUpgrades * 0.1) *
+    return new PowiainaNum(((1 + this.data.powerDEUpgrades * 0.1) *
       Math.pow(1.005, this.data.powerDEUpgrades)) * tierFactor / 1000)
       .times(this.commonDarkMult)
       .times(Math.pow(POWER_DE_PER_ASCENSION, this.ascensions))
@@ -99,7 +99,7 @@ export class DarkMatterDimensionState extends DimensionState {
   }
 
   get intervalAfterAscension() {
-    const purchases = Decimal.affordGeometricSeries(Currency.darkMatter.value, this.rawIntervalCost,
+    const purchases = PowiainaNum.affordGeometricSeries(Currency.darkMatter.value, this.rawIntervalCost,
       this.intervalCostIncrease, 0).toNumber();
     return Math.clampMin(this.intervalPurchaseCap, SingularityMilestone.ascensionIntervalScaling.effectOrDefault(1200) *
       this.rawInterval * Math.pow(INTERVAL_PER_UPGRADE, purchases));
@@ -112,7 +112,7 @@ export class DarkMatterDimensionState extends DimensionState {
   }
 
   get rawIntervalCost() {
-    return Decimal.pow(this.intervalCostIncrease, this.data.intervalUpgrades)
+    return PowiainaNum.pow(this.intervalCostIncrease, this.data.intervalUpgrades)
       .times(this.adjustedStartingCost).times(INTERVAL_START_COST);
   }
 
@@ -125,7 +125,7 @@ export class DarkMatterDimensionState extends DimensionState {
   }
 
   get rawPowerDMCost() {
-    return Decimal.pow(this.powerDMCostIncrease, this.data.powerDMUpgrades)
+    return PowiainaNum.pow(this.powerDMCostIncrease, this.data.powerDMUpgrades)
       .times(this.adjustedStartingCost).times(POWER_DM_START_COST);
   }
 
@@ -138,7 +138,7 @@ export class DarkMatterDimensionState extends DimensionState {
   }
 
   get rawPowerDECost() {
-    return Decimal.pow(this.powerDECostIncrease, this.data.powerDEUpgrades)
+    return PowiainaNum.pow(this.powerDECostIncrease, this.data.powerDEUpgrades)
       .times(this.adjustedStartingCost).times(POWER_DE_START_COST);
   }
 
@@ -177,7 +177,7 @@ export class DarkMatterDimensionState extends DimensionState {
   buyManyInterval(x) {
     if (x > this.maxIntervalPurchases) return false;
     const cost = this.rawIntervalCost.times(
-      Decimal.pow(this.intervalCostIncrease, x).minus(1)).div(this.intervalCostIncrease - 1).floor();
+      PowiainaNum.pow(this.intervalCostIncrease, x).minus(1)).div(this.intervalCostIncrease - 1).floor();
     if (!Currency.darkMatter.purchase(cost)) return false;
     this.data.intervalUpgrades += x;
     return true;
@@ -185,7 +185,7 @@ export class DarkMatterDimensionState extends DimensionState {
 
   buyManyPowerDM(x) {
     const cost = this.rawPowerDMCost.times(
-      Decimal.pow(this.powerDMCostIncrease, x).minus(1)).div(this.powerDMCostIncrease - 1).floor();
+      PowiainaNum.pow(this.powerDMCostIncrease, x).minus(1)).div(this.powerDMCostIncrease - 1).floor();
     if (!Currency.darkMatter.purchase(cost)) return false;
     this.data.powerDMUpgrades += x;
     return true;
@@ -193,7 +193,7 @@ export class DarkMatterDimensionState extends DimensionState {
 
   buyManyPowerDE(x) {
     const cost = this.rawPowerDECost.times(
-      Decimal.pow(this.powerDECostIncrease, x).minus(1)).div(this.powerDECostIncrease - 1).floor();
+      PowiainaNum.pow(this.powerDECostIncrease, x).minus(1)).div(this.powerDECostIncrease - 1).floor();
     if (!Currency.darkMatter.purchase(cost)) return false;
     this.data.powerDEUpgrades += x;
     return true;

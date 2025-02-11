@@ -155,7 +155,7 @@ class RiftState extends GameMechanicState {
     }
     if (!this.isActive || this.isMaxed) return;
 
-    if (this.fillCurrency.value instanceof Decimal) {
+    if (this.fillCurrency.value instanceof PowiainaNum) {
       // Don't drain resources if you only have 1 of it.
       // This is in place due to the fix to replicanti below.
       if (this.fillCurrency.value.lte(1)) return;

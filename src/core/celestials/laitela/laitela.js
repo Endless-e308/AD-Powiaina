@@ -44,7 +44,7 @@ export const Laitela = {
     }
   },
   get matterExtraPurchaseFactor() {
-    return (1 + 0.5 * Math.pow(Decimal.pLog10(Currency.darkMatter.max) / 50, 0.4) *
+    return (1 + 0.5 * Math.pow(PowiainaNum.pLog10(Currency.darkMatter.max) / 50, 0.4) *
       (1 + SingularityMilestone.continuumMult.effectOrDefault(0)));
   },
   get realityReward() {
@@ -56,7 +56,7 @@ export const Laitela = {
     return Math.clamp(Math.pow(Currency.antimatter.value.add(1).log10() / 1e11, 2), 0, 100) / 200;
   },
   get darkMatterMultGain() {
-    return Decimal.pow(Currency.darkMatter.value.dividedBy(this.annihilationDMRequirement)
+    return PowiainaNum.pow(Currency.darkMatter.value.dividedBy(this.annihilationDMRequirement)
       .plus(1).log10(), 1.5).toNumber() * ImaginaryUpgrade(21).effectOrDefault(1);
   },
   get darkMatterMult() {
@@ -95,7 +95,7 @@ export const Laitela = {
       .flat(1);
     const buy = function(upgrade, purchases) {
       upgrade[3](purchases);
-      upgrade[0] = upgrade[0].times(Decimal.pow(upgrade[1], purchases));
+      upgrade[0] = upgrade[0].times(PowiainaNum.pow(upgrade[1], purchases));
       upgrade[2] -= purchases;
     };
     // Buy everything costing less than 0.02 of initial matter.
