@@ -81,22 +81,22 @@ const TimeUnit = createCategory("TimeUnit");
 
 createInCategory(ComparisonOperator, "OpGTE", />=/, {
   $autocomplete: ">=",
-  $compare: (a, b) => Decimal.gte(a, b),
+  $compare: (a, b) => PowiainaNum.gte(a, b),
 });
 createInCategory(ComparisonOperator, "OpLTE", /<=/, {
   $autocomplete: "<=",
-  $compare: (a, b) => Decimal.lte(a, b),
+  $compare: (a, b) => PowiainaNum.lte(a, b),
 });
 createInCategory(ComparisonOperator, "OpGT", />/, {
   $autocomplete: ">",
-  $compare: (a, b) => Decimal.gt(a, b),
+  $compare: (a, b) => PowiainaNum.gt(a, b),
 });
 createInCategory(ComparisonOperator, "OpLT", /</, {
   $autocomplete: "<",
-  $compare: (a, b) => Decimal.lt(a, b),
+  $compare: (a, b) => PowiainaNum.lt(a, b),
 });
 const OpEQ = createInCategory(ComparisonOperator, "OpEQ", /==/, {
-  $compare: (a, b) => Decimal.eq(a, b),
+  $compare: (a, b) => PowiainaNum.eq(a, b),
 });
 // EqualSign is a single = which is defined for both comparisons and define
 const EqualSign = createToken({
@@ -106,14 +106,14 @@ const EqualSign = createToken({
   label: "=",
   longer_alt: OpEQ,
 });
-EqualSign.$compare = (a, b) => Decimal.eq(a, b);
+EqualSign.$compare = (a, b) => PowiainaNum.eq(a, b);
 
 createInCategory(AutomatorCurrency, "EP", /ep/i, { $getter: () => Currency.eternityPoints.value });
 createInCategory(AutomatorCurrency, "IP", /ip/i, { $getter: () => Currency.infinityPoints.value });
 createInCategory(AutomatorCurrency, "AM", /am/i, { $getter: () => Currency.antimatter.value });
 createInCategory(AutomatorCurrency, "DT", /dt/i, { $getter: () => Currency.dilatedTime.value });
 createInCategory(AutomatorCurrency, "TP", /tp/i, { $getter: () => Currency.tachyonParticles.value });
-createInCategory(AutomatorCurrency, "RG", /rg/i, { $getter: () => new Decimal(Replicanti.galaxies.total) });
+createInCategory(AutomatorCurrency, "RG", /rg/i, { $getter: () => new PowiainaNum(Replicanti.galaxies.total) });
 createInCategory(AutomatorCurrency, "RM", /rm/i, { $getter: () => Currency.realityMachines.value });
 
 createInCategory(AutomatorCurrency, "infinities", /infinities/i, { $getter: () => Currency.infinities.value });
@@ -142,7 +142,7 @@ createInCategory(AutomatorCurrency, "PendingRM", /pending[ \t]+rm/i, {
 });
 createInCategory(AutomatorCurrency, "PendingGlyphLevel", /pending[ \t]+glyph[ \t]+level/i, {
   $autocomplete: "pending Glyph level",
-  $getter: () => new Decimal(isRealityAvailable() ? gainedGlyphLevel().actualLevel : 0),
+  $getter: () => new PowiainaNum(isRealityAvailable() ? gainedGlyphLevel().actualLevel : 0),
 });
 
 createInCategory(AutomatorCurrency, "Rep", /rep(licanti)?/i, {
@@ -159,7 +159,7 @@ createInCategory(AutomatorCurrency, "TotalTT", /total[ \t]+tt/i, {
 });
 createInCategory(AutomatorCurrency, "SpentTT", /spent[ \t]+tt/i, {
   $autocomplete: "spent TT",
-  $getter: () => new Decimal(GameCache.currentStudyTree.value.spentTheorems[0]),
+  $getter: () => new PowiainaNum(GameCache.currentStudyTree.value.spentTheorems[0]),
 });
 
 createInCategory(AutomatorCurrency, "TotalCompletions", /total[ \t]+completions/i, {
@@ -172,7 +172,7 @@ createInCategory(AutomatorCurrency, "PendingCompletions", /pending[ \t]+completi
   $getter: () => {
     // If we are not in an EC, pretend like we have a ton of completions so any check for sufficient
     // completions returns true
-    if (!EternityChallenge.isRunning) return Decimal.NUMBER_MAX_VALUE;
+    if (!EternityChallenge.isRunning) return PowiainaNum.NUMBER_MAX_VALUE;
     return EternityChallenge.current.gainedCompletionStatus.totalCompletions;
   }
 });
@@ -399,7 +399,8 @@ export const standardizeAutomatorValues = function(x) {
   try {
     if (automatorCurrencyNames.includes(x.toUpperCase())) return x.toUpperCase();
   } catch {
-    // This only happens if the input is a number or Decimal, in which case we don't attempt to change any formatting
+    // eslint-disable-next-line max-len
+    // This only happens if the input is a number or PowiainaNum, in which case we don't attempt to change any formatting
     // and simply return
     return x;
   }
