@@ -1,4 +1,4 @@
-import { format as formatPowiainanum } from "format-powiainanum";
+import { format } from "format-powiainanum";
 
 export const NG = {
   startNewGame() {
