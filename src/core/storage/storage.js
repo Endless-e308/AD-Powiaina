@@ -1,4 +1,4 @@
-import { format as formatPowiainanum } from "format-powiainanum";
+import { format } from "format-powiainanum";
 
 import { DEV } from "@/env";
 import { devMigrations } from "./dev-migrations";
